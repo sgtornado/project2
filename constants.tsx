@@ -46,6 +46,13 @@ export const MOCK_CANDIDATES: Candidate[] = [
     score: 92,
     status: CandidateStatus.ACCEPTED,
     compliance: ComplianceBadge.CONFORME,
+    observations: "Dossier technique et administratif conforme aux exigences du CPS. Références solides.",
+    // Fix: Added missing required properties
+    financialOffer: 1150000,
+    yearsExperience: 12,
+    pastProjects: 15,
+    adminComplete: true,
+    technicalScoreRaw: 92
   },
   {
     id: "2",
@@ -57,6 +64,13 @@ export const MOCK_CANDIDATES: Candidate[] = [
     score: 45,
     status: CandidateStatus.REJECTED,
     compliance: ComplianceBadge.NON_CONFORME,
+    observations: "Manque de garanties financières et absence de cautionnement provisoire.",
+    // Fix: Added missing required properties
+    financialOffer: 1300000,
+    yearsExperience: 4,
+    pastProjects: 2,
+    adminComplete: false,
+    technicalScoreRaw: 45
   },
   {
     id: "3",
@@ -68,6 +82,13 @@ export const MOCK_CANDIDATES: Candidate[] = [
     score: 78,
     status: CandidateStatus.REVIEW,
     compliance: ComplianceBadge.RISQUE,
+    observations: "Certaines références techniques nécessitent une vérification complémentaire auprès des clients.",
+    // Fix: Added missing required properties
+    financialOffer: 310000,
+    yearsExperience: 6,
+    pastProjects: 8,
+    adminComplete: true,
+    technicalScoreRaw: 78
   },
   {
     id: "4",
@@ -79,6 +100,13 @@ export const MOCK_CANDIDATES: Candidate[] = [
     score: 88,
     status: CandidateStatus.ACCEPTED,
     compliance: ComplianceBadge.CONFORME,
+    observations: "Excellente proposition méthodologique adaptée aux contraintes du site.",
+    // Fix: Added missing required properties
+    financialOffer: 1180000,
+    yearsExperience: 10,
+    pastProjects: 12,
+    adminComplete: true,
+    technicalScoreRaw: 88
   }
 ];
 

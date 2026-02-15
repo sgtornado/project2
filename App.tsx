@@ -7,7 +7,7 @@ import UploadTender from './pages/UploadTender';
 import UploadCandidate from './pages/UploadCandidate';
 import Results from './pages/Results';
 import { Page, Tender, Candidate } from './types';
-import { MOCK_TENDERS, MOCK_CANDIDATES } from './constants';
+import { MOCK_TENDERS } from './constants';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -36,6 +36,10 @@ const App: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleAddCandidate = (candidate: Candidate) => {
+    setCandidates(prev => [...prev, candidate]);
+  };
+
   const renderPage = () => {
     switch (currentPage) {
       case 'LOGIN':
@@ -50,12 +54,15 @@ const App: React.FC = () => {
             tender={currentTender || MOCK_TENDERS[0]} 
             onNext={() => setCurrentPage('STEP_RESULTS')}
             onBack={() => setCurrentPage('STEP_TENDER')}
+            onAddCandidate={handleAddCandidate}
+            candidatesCount={candidates.length}
           />
         );
       case 'STEP_RESULTS':
         return (
           <Results 
             tender={currentTender || MOCK_TENDERS[0]} 
+            candidates={candidates}
             onBack={() => setCurrentPage('STEP_CANDIDATES')}
             onRestart={() => {
                 setCurrentTender(null);
