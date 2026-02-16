@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import UploadTender from './pages/UploadTender';
 import UploadCandidate from './pages/UploadCandidate';
 import Results from './pages/Results';
@@ -17,7 +18,7 @@ const App: React.FC = () => {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
-    setCurrentPage('STEP_TENDER');
+    setCurrentPage('DASHBOARD');
   };
 
   const handleLogout = () => {
@@ -32,7 +33,13 @@ const App: React.FC = () => {
     setCurrentPage('STEP_CANDIDATES');
   };
 
-  const handleNavigate = (page: Page) => {
+  const handleNavigate = (page: Page, tender?: Tender) => {
+    if (tender) {
+      setCurrentTender(tender);
+      if (tender.reference === 'AO-2026-001' && candidates.length === 0) {
+        // Optionnel : charger des candidats mockés ici si besoin
+      }
+    }
     setCurrentPage(page);
   };
 
@@ -46,6 +53,15 @@ const App: React.FC = () => {
         return <Login onLogin={handleLogin} onNavigateToRegister={() => setCurrentPage('REGISTER')} />;
       case 'REGISTER':
         return <Register onRegister={handleLogin} onNavigateToLogin={() => setCurrentPage('LOGIN')} />;
+      case 'DASHBOARD':
+        return (
+          <Dashboard 
+            onNavigate={(page, tender) => {
+              if (page === 'UPLOAD_TENDER') handleNavigate('STEP_TENDER');
+              else if (page === 'RESULTS' && tender) handleNavigate('STEP_RESULTS', tender);
+            }} 
+          />
+        );
       case 'STEP_TENDER':
         return <UploadTender onComplete={handleTenderCreated} />;
       case 'STEP_CANDIDATES':
@@ -53,7 +69,7 @@ const App: React.FC = () => {
           <UploadCandidate 
             tender={currentTender || MOCK_TENDERS[0]} 
             onNext={() => setCurrentPage('STEP_RESULTS')}
-            onBack={() => setCurrentPage('STEP_TENDER')}
+            onBack={() => setCurrentPage('DASHBOARD')}
             onAddCandidate={handleAddCandidate}
             candidatesCount={candidates.length}
           />
@@ -63,11 +79,14 @@ const App: React.FC = () => {
           <Results 
             tender={currentTender || MOCK_TENDERS[0]} 
             candidates={candidates}
-            onBack={() => setCurrentPage('STEP_CANDIDATES')}
+            onBack={() => {
+              if (currentTender) setCurrentPage('STEP_CANDIDATES');
+              else setCurrentPage('DASHBOARD');
+            }}
             onRestart={() => {
                 setCurrentTender(null);
                 setCandidates([]);
-                setCurrentPage('STEP_TENDER');
+                setCurrentPage('DASHBOARD');
             }}
           />
         );

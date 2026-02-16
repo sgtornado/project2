@@ -1,9 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Candidate, CandidateStatus, ComplianceBadge, Tender } from './types';
 
 export const INSTITUTION_NAME = "Académie Régionale de l’Éducation et de la Formation – Guelmim-Oued Noun";
 export const YEAR = "2026";
+
+// Official Portal Links
+export const NATIONAL_PORTAL_URL = "https://www.marchespublics.gov.ma";
+export const USER_GUIDE_URL = "https://www.marchespublics.gov.ma/index.php?option=com_content&view=article&id=32&Itemid=484";
+export const SUPPORT_EMAIL = "support.daf@aref-gon.ma";
 
 export const COLORS = {
   primary: "#1e3a8a", // Blue 900
@@ -47,12 +52,6 @@ export const MOCK_CANDIDATES: Candidate[] = [
     status: CandidateStatus.ACCEPTED,
     compliance: ComplianceBadge.CONFORME,
     observations: "Dossier technique et administratif conforme aux exigences du CPS. Références solides.",
-    // Fix: Added missing required properties
-    financialOffer: 1150000,
-    yearsExperience: 12,
-    pastProjects: 15,
-    adminComplete: true,
-    technicalScoreRaw: 92
   },
   {
     id: "2",
@@ -65,76 +64,31 @@ export const MOCK_CANDIDATES: Candidate[] = [
     status: CandidateStatus.REJECTED,
     compliance: ComplianceBadge.NON_CONFORME,
     observations: "Manque de garanties financières et absence de cautionnement provisoire.",
-    // Fix: Added missing required properties
-    financialOffer: 1300000,
-    yearsExperience: 4,
-    pastProjects: 2,
-    adminComplete: false,
-    technicalScoreRaw: 45
-  },
-  {
-    id: "3",
-    tenderRef: "AO-2026-003",
-    name: "Oued Noun Services",
-    fiscalId: "IF-44556677",
-    region: "Assa-Zag",
-    contact: "info@ouednoun.ma",
-    score: 78,
-    status: CandidateStatus.REVIEW,
-    compliance: ComplianceBadge.RISQUE,
-    observations: "Certaines références techniques nécessitent une vérification complémentaire auprès des clients.",
-    // Fix: Added missing required properties
-    financialOffer: 310000,
-    yearsExperience: 6,
-    pastProjects: 8,
-    adminComplete: true,
-    technicalScoreRaw: 78
-  },
-  {
-    id: "4",
-    tenderRef: "AO-2026-001",
-    name: "Logiscolar Group",
-    fiscalId: "IF-88776655",
-    region: "Sidi Ifni",
-    contact: "pro@logiscolar.com",
-    score: 88,
-    status: CandidateStatus.ACCEPTED,
-    compliance: ComplianceBadge.CONFORME,
-    observations: "Excellente proposition méthodologique adaptée aux contraintes du site.",
-    // Fix: Added missing required properties
-    financialOffer: 1180000,
-    yearsExperience: 10,
-    pastProjects: 12,
-    adminComplete: true,
-    technicalScoreRaw: 88
   }
 ];
 
-export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: string }) => (
-  <div className="flex items-center justify-center">
-    <img 
-      src="https://scontent-mad2-1.xx.fbcdn.net/v/t39.30808-6/493080539_2638978652957390_9212634320391985333_n.jpg?stp=dst-jpg_s320x320_tt6&_nc_cat=109&ccb=1-7&_nc_sid=03db49&_nc_ohc=f2q7hRaQ7yUQ7kNvwFPGPFP&_nc_oc=Adm54YTlG13jzdYpWHBNHzCw8MCvCmXacqGDHIyAMwjWK6faBL1Ez-U3KfLGjxErArU&_nc_zt=23&_nc_ht=scontent-mad2-1.xx&_nc_gid=64Nw9cU_ILNPcGDdMforCw&oh=00_AftaT2SqRUPm1-NSNU6ybOZI80zraQyAQJooWIR6kdnpyw&oe=69924404" 
-      alt="Logo Officiel AREF Guelmim-Oued Noun" 
-      className={`${className} rounded shadow-sm`}
-      onError={(e) => {
-        const target = e.target as HTMLImageElement;
-        target.style.display = 'none';
-        const parent = target.parentElement;
-        if (parent) {
-          const fallback = document.createElement('div');
-          fallback.className = 'flex items-center space-x-2';
-          fallback.innerHTML = `
-            <div class="w-12 h-12 bg-blue-900 rounded-lg flex items-center justify-center text-white font-bold text-xl border-2 border-green-600">
-              AREF
-            </div>
-            <div class="flex flex-col">
-              <span class="text-xs font-bold text-blue-900 leading-tight uppercase">Académie Régionale</span>
-              <span class="text-[10px] text-green-700 font-black">GUELMIM-OUED NOUN</span>
-            </div>
-          `;
-          parent.appendChild(fallback);
-        }
-      }}
-    />
-  </div>
-);
+export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: string }) => {
+  const [hasError, setHasError] = useState(false);
+  
+  // Utilisation d'une version stable PNG du logo officiel depuis Wikimedia (CORS safe)
+  const logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png/600px-Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png";
+
+  if (hasError) {
+    return (
+      <div className={`${className} bg-blue-900/10 flex items-center justify-center rounded px-2 border border-blue-900/20`}>
+        <span className="text-blue-900 text-[10px] font-black leading-tight text-center uppercase tracking-tighter">AREF GON</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-center">
+      <img 
+        src={logoUrl} 
+        alt="Logo Ministère de l'Éducation Nationale Maroc" 
+        className={`${className} object-contain mix-blend-multiply transition-opacity duration-300`}
+        onError={() => setHasError(true)}
+      />
+    </div>
+  );
+};

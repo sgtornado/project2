@@ -16,19 +16,6 @@ export enum ComplianceBadge {
   NON_CONFORME = 'Non conforme'
 }
 
-export interface CandidateEvaluation {
-  technical_score_final: number;
-  financial_score: number;
-  total_score: number;
-  ranking: number;
-  risk_level: string;
-  recommendation: string;
-  strengths: string;
-  weaknesses: string;
-  technical_adjustment_explanation: string;
-  administrative_status: string;
-}
-
 export interface Candidate {
   id: string;
   tenderRef: string;
@@ -41,14 +28,6 @@ export interface Candidate {
   compliance: ComplianceBadge;
   observations: string;
   isAiAnalyzed?: boolean;
-  // Raw data extracted from PDF
-  financialOffer: number;
-  yearsExperience: number;
-  pastProjects: number;
-  adminComplete: boolean;
-  technicalScoreRaw: number;
-  // Evaluation result
-  evaluation?: CandidateEvaluation;
 }
 
 export interface Tender {
@@ -57,8 +36,6 @@ export interface Tender {
   budget: number;
   deadline: string;
   status: 'Ouvert' | 'En analyse' | 'Clôturé';
-  techWeight?: number;
-  finWeight?: number;
 }
 
-export type Page = 'LOGIN' | 'REGISTER' | 'STEP_TENDER' | 'STEP_CANDIDATES' | 'STEP_RESULTS';
+export type Page = 'LOGIN' | 'REGISTER' | 'DASHBOARD' | 'STEP_TENDER' | 'STEP_CANDIDATES' | 'STEP_RESULTS';
