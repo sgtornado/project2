@@ -70,7 +70,6 @@ export const MOCK_CANDIDATES: Candidate[] = [
 export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: string }) => {
   const [hasError, setHasError] = useState(false);
   
-  // Utilisation d'une version stable PNG du logo officiel depuis Wikimedia (CORS safe)
   const logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png/600px-Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png";
 
   if (hasError) {
@@ -85,10 +84,13 @@ export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: str
     <div className="flex items-center justify-center">
       <img 
         src={logoUrl} 
-        alt="Logo Ministère de l'Éducation Nationale Maroc" 
-        className={`${className} object-contain mix-blend-multiply transition-opacity duration-300`}
+        alt="Logo Institutionnel" 
+        className={`${className} object-contain transition-opacity duration-300`}
         onError={() => setHasError(true)}
       />
     </div>
   );
 };
+
+// Compatibilité
+export const OfficialBranding = LogoPlaceholder;

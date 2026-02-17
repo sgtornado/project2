@@ -2,7 +2,7 @@
 import React from 'react';
 import { 
   LogoPlaceholder, 
-  INSTITUTION_NAME, 
+  INSTITUTION_NAME,
   YEAR, 
   NATIONAL_PORTAL_URL, 
   USER_GUIDE_URL, 
@@ -19,33 +19,47 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, isAuthenticated, onLogout, currentPage, onNavigate }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header classique AREF */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      {/* Header Institutionnel Original */}
+      <header className="bg-white border-b-4 border-blue-900 shadow-md sticky top-0 z-50 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center cursor-pointer" onClick={() => isAuthenticated && onNavigate('DASHBOARD')}>
-              <LogoPlaceholder className="h-12 w-auto" />
-              <div className="hidden sm:block ml-4 border-l pl-4 border-gray-200">
-                <p className="text-xs font-black text-blue-900 uppercase tracking-widest leading-none">AREF</p>
-                <p className="text-[10px] font-bold text-green-700 uppercase tracking-tighter">Guelmim-Oued Noun</p>
+          <div className="flex justify-between items-center h-24">
+            {/* Branding Section */}
+            <div 
+              className="flex items-center gap-4 cursor-pointer" 
+              onClick={() => isAuthenticated && onNavigate('DASHBOARD')}
+            >
+              <LogoPlaceholder className="h-16 w-auto sm:h-20" />
+              <div className="hidden lg:block border-l-2 pl-4 border-slate-200">
+                <h1 className="text-blue-900 text-xs font-black uppercase tracking-wider leading-tight max-w-[280px]">
+                  {INSTITUTION_NAME}
+                </h1>
+              </div>
+              <div className="lg:hidden block border-l-2 pl-3 border-slate-200">
+                <p className="text-blue-900 text-[10px] font-black uppercase tracking-widest leading-none">AREF</p>
+                <p className="text-green-700 text-[9px] font-bold uppercase tracking-tighter">GON</p>
               </div>
             </div>
 
+            {/* Navigation Section */}
             {isAuthenticated && (
-              <div className="hidden md:flex items-center space-x-8">
+              <div className="hidden md:flex items-center space-x-6">
                 <button 
                   onClick={() => onNavigate('DASHBOARD')}
-                  className={`text-xs font-black uppercase tracking-widest transition-colors ${
-                    currentPage === 'DASHBOARD' ? 'text-blue-900 border-b-2 border-blue-900 pb-1' : 'text-gray-400 hover:text-blue-900'
+                  className={`px-3 py-2 text-[11px] font-black uppercase tracking-widest transition-all rounded-md ${
+                    currentPage === 'DASHBOARD' 
+                      ? 'text-white bg-blue-900 shadow-md' 
+                      : 'text-slate-500 hover:text-blue-900 hover:bg-slate-50'
                   }`}
                 >
                   Tableau de bord
                 </button>
                 <button 
                   onClick={() => onNavigate('STEP_TENDER')}
-                  className={`text-xs font-black uppercase tracking-widest transition-colors ${
-                    currentPage === 'STEP_TENDER' ? 'text-blue-900 border-b-2 border-blue-900 pb-1' : 'text-gray-400 hover:text-blue-900'
+                  className={`px-3 py-2 text-[11px] font-black uppercase tracking-widest transition-all rounded-md ${
+                    currentPage === 'STEP_TENDER' 
+                      ? 'text-white bg-blue-900 shadow-md' 
+                      : 'text-slate-500 hover:text-blue-900 hover:bg-slate-50'
                   }`}
                 >
                   Nouveau Marché
@@ -53,11 +67,12 @@ const Layout: React.FC<LayoutProps> = ({ children, isAuthenticated, onLogout, cu
               </div>
             )}
 
-            <div className="flex items-center">
+            {/* Action Section */}
+            <div className="flex items-center gap-3">
               {isAuthenticated && (
                 <button 
                   onClick={onLogout}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-[10px] font-black uppercase tracking-widest transition-colors border border-gray-300 shadow-sm"
+                  className="bg-slate-100 hover:bg-red-50 hover:text-red-700 text-slate-600 px-4 py-2.5 rounded border border-slate-200 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
                 >
                   Déconnexion
                 </button>
@@ -67,42 +82,32 @@ const Layout: React.FC<LayoutProps> = ({ children, isAuthenticated, onLogout, cu
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-grow py-10 relative">
-        {children}
+      {/* Main Content Area */}
+      <main className="flex-grow py-8 px-4">
+        <div className="max-w-7xl mx-auto">
+          {children}
+        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-blue-900 text-white py-10">
+      {/* Footer Institutionnel */}
+      <footer className="bg-slate-900 text-white py-12 border-t-8 border-green-700 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
-            <div className="text-center md:text-left">
-              <p className="text-sm font-bold tracking-wide">© {YEAR} {INSTITUTION_NAME}</p>
-              <p className="text-xs text-blue-300 mt-2 font-medium uppercase tracking-tight">Direction des Affaires Juridiques et de la Logistique</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="text-center md:text-left space-y-4">
+              <div className="flex justify-center md:justify-start items-center gap-3">
+                 <div className="bg-white p-1 rounded-sm w-12 h-12 flex items-center justify-center">
+                    <LogoPlaceholder className="h-10 w-auto" />
+                 </div>
+                 <div className="text-left">
+                    <p className="text-sm font-black tracking-tight uppercase leading-tight">AREF Guelmim-Oued Noun</p>
+                    <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Marchés Publics © {YEAR}</p>
+                 </div>
+              </div>
             </div>
-            <div className="flex flex-wrap justify-center gap-8 text-[11px] font-bold uppercase tracking-wider text-blue-200">
-              <a 
-                href={USER_GUIDE_URL} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-white transition-colors flex items-center gap-1"
-              >
-                <span>📘</span> Guide Utilisateur
-              </a>
-              <a 
-                href={`mailto:${SUPPORT_EMAIL}`}
-                className="hover:text-white transition-colors flex items-center gap-1"
-              >
-                <span>✉️</span> Support Technique
-              </a>
-              <a 
-                href={NATIONAL_PORTAL_URL} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-white transition-colors flex items-center gap-1"
-              >
-                <span>🌐</span> Portail National
-              </a>
+            <div className="flex flex-wrap justify-center md:justify-end gap-4 text-[9px] font-black uppercase tracking-widest">
+              <a href={USER_GUIDE_URL} target="_blank" rel="noopener noreferrer" className="bg-slate-800 hover:bg-blue-900 px-4 py-2 rounded transition-colors border border-slate-700">Guide</a>
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="bg-slate-800 hover:bg-blue-900 px-4 py-2 rounded transition-colors border border-slate-700">Support</a>
+              <a href={NATIONAL_PORTAL_URL} target="_blank" rel="noopener noreferrer" className="bg-slate-800 hover:bg-blue-900 px-4 py-2 rounded transition-colors border border-slate-700">Portail National</a>
             </div>
           </div>
         </div>
