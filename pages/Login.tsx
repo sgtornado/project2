@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { LogoPlaceholder, INSTITUTION_NAME } from '../constants';
+import { INSTITUTION_NAME } from '../constants';
 
 interface LoginProps {
   onLogin: () => void;
@@ -22,31 +22,28 @@ const Login: React.FC<LoginProps> = ({ onLogin, onNavigateToRegister }) => {
   };
 
   return (
-    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 min-h-[80vh]">
+    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 min-h-[70vh]">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl border border-slate-100 relative overflow-hidden">
         {/* Bande décorative institutionnelle */}
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-900 via-blue-800 to-green-700"></div>
         
         <div className="text-center">
-          <div className="inline-flex items-center justify-center p-3 bg-slate-50 rounded-xl mb-6 shadow-inner border border-slate-100">
-            <LogoPlaceholder className="h-24 w-auto sm:h-32" />
-          </div>
-          <div className="space-y-1">
+          <div className="space-y-1 mt-4">
             <h2 className="text-blue-900 text-xs font-black uppercase tracking-widest leading-tight">
-              {INSTITUTION_NAME}
+              Portail AREF Guelmim-Oued Noun
             </h2>
-            <p className="pt-4 text-slate-800 text-lg font-black uppercase tracking-tighter">
-              Portail Marchés Publics
+            <p className="pt-2 text-slate-800 text-lg font-black uppercase tracking-tighter">
+              Marchés Publics
             </p>
             <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">
-              Accès Sécurisé
+              Authentification requise
             </p>
           </div>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-600 p-4 mb-4">
+            <div className="bg-red-50 border-l-4 border-red-600 p-4 mb-4 rounded-r-lg">
               <p className="text-[11px] text-red-700 font-black uppercase tracking-wider">{error}</p>
             </div>
           )}

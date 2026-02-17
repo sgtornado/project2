@@ -68,25 +68,27 @@ export const MOCK_CANDIDATES: Candidate[] = [
 ];
 
 export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: string }) => {
-  const [hasError, setHasError] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   
-  const logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png/600px-Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png";
-
-  if (hasError) {
-    return (
-      <div className={`${className} bg-blue-900/10 flex items-center justify-center rounded px-2 border border-blue-900/20`}>
-        <span className="text-blue-900 text-[10px] font-black leading-tight text-center uppercase tracking-tighter">AREF GON</span>
-      </div>
-    );
-  }
+  // Image officielle locale demandée
+  const logoUrl = "logo-aref.png";
+  
+  // Fallback institutionnel sécurisé (Wikipedia Commons)
+  const fallbackUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png/600px-Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png";
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center bg-transparent shrink-0">
       <img 
-        src={logoUrl} 
-        alt="Logo Institutionnel" 
+        src={useFallback ? fallbackUrl : logoUrl} 
+        alt="Logo AREF Guelmim-Oued Noun" 
+        width="200"
+        height="80"
+        decoding="async"
+        loading="eager"
         className={`${className} object-contain transition-opacity duration-300`}
-        onError={() => setHasError(true)}
+        onError={() => {
+          if (!useFallback) setUseFallback(true);
+        }}
       />
     </div>
   );
