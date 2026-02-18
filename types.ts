@@ -28,6 +28,11 @@ export interface Candidate {
   compliance: ComplianceBadge;
   observations: string;
   isAiAnalyzed?: boolean;
+  aiDetailedReport?: {
+    strengths: string[];
+    weaknesses: string[];
+    technicalAnalysis: string;
+  };
 }
 
 export interface Tender {
