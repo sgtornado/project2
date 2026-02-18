@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -9,23 +9,40 @@ import UploadCandidate from './pages/UploadCandidate';
 import Results from './pages/Results';
 import { Page, Tender, Candidate } from './types';
 import { MOCK_TENDERS } from './constants';
+import { supabase } from './supabase';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<Page>('LOGIN');
   const [currentTender, setCurrentTender] = useState<Tender | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    setCurrentPage('DASHBOARD');
-  };
+  useEffect(() => {
+    // Vérifier la session actuelle au chargement
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+      if (session) setCurrentPage('DASHBOARD');
+      setIsLoading(false);
+    });
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentPage('LOGIN');
-    setCurrentTender(null);
-    setCandidates([]);
+    // Écouter les changements d'état (connexion/déconnexion)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+      if (session) {
+        setCurrentPage('DASHBOARD');
+      } else {
+        setCurrentPage('LOGIN');
+        setCurrentTender(null);
+        setCandidates([]);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
   };
 
   const handleTenderCreated = (tender: Tender) => {
@@ -36,9 +53,6 @@ const App: React.FC = () => {
   const handleNavigate = (page: Page, tender?: Tender) => {
     if (tender) {
       setCurrentTender(tender);
-      if (tender.reference === 'AO-2026-001' && candidates.length === 0) {
-        // Optionnel : charger des candidats mockés ici si besoin
-      }
     }
     setCurrentPage(page);
   };
@@ -47,12 +61,20 @@ const App: React.FC = () => {
     setCandidates(prev => [...prev, candidate]);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   const renderPage = () => {
     switch (currentPage) {
       case 'LOGIN':
-        return <Login onLogin={handleLogin} onNavigateToRegister={() => setCurrentPage('REGISTER')} />;
+        return <Login onLogin={() => setCurrentPage('DASHBOARD')} onNavigateToRegister={() => setCurrentPage('REGISTER')} />;
       case 'REGISTER':
-        return <Register onRegister={handleLogin} onNavigateToLogin={() => setCurrentPage('LOGIN')} />;
+        return <Register onRegister={() => setCurrentPage('DASHBOARD')} onNavigateToLogin={() => setCurrentPage('LOGIN')} />;
       case 'DASHBOARD':
         return (
           <Dashboard 
@@ -91,7 +113,7 @@ const App: React.FC = () => {
           />
         );
       default:
-        return <Login onLogin={handleLogin} onNavigateToRegister={() => setCurrentPage('REGISTER')} />;
+        return <Login onLogin={() => setCurrentPage('DASHBOARD')} onNavigateToRegister={() => setCurrentPage('REGISTER')} />;
     }
   };
 

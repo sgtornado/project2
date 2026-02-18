@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { LogoPlaceholder } from '../constants';
+import { supabase } from '../supabase';
 
 interface LoginProps {
   onLogin: () => void;
@@ -11,13 +12,25 @@ const Login: React.FC<LoginProps> = ({ onLogin, onNavigateToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) throw authError;
       onLogin();
-    } else {
-      setError('Veuillez renseigner tous les champs obligatoires.');
+    } catch (err: any) {
+      setError(err.message || 'Erreur lors de la connexion. Vérifiez vos identifiants.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,26 +56,31 @@ const Login: React.FC<LoginProps> = ({ onLogin, onNavigateToRegister }) => {
             <input
               type="email"
               required
+              disabled={isLoading}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="appearance-none rounded-xl block w-full px-4 py-4 border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm font-bold"
+              className="appearance-none rounded-xl block w-full px-4 py-4 border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm font-bold disabled:opacity-50"
               placeholder="Email professionnel"
             />
             <input
               type="password"
               required
+              disabled={isLoading}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="appearance-none rounded-xl block w-full px-4 py-4 border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm font-bold"
+              className="appearance-none rounded-xl block w-full px-4 py-4 border border-slate-200 bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900 text-sm font-bold disabled:opacity-50"
               placeholder="Mot de passe"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-4 px-4 text-xs font-black uppercase tracking-widest rounded-xl text-white bg-blue-900 hover:bg-blue-800 transition-all shadow-lg"
+            disabled={isLoading}
+            className="w-full py-4 px-4 text-xs font-black uppercase tracking-widest rounded-xl text-white bg-blue-900 hover:bg-blue-800 transition-all shadow-lg disabled:opacity-50 flex justify-center items-center"
           >
-            Se connecter
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : 'Se connecter'}
           </button>
         </form>
 

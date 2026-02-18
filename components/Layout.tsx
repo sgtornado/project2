@@ -57,6 +57,17 @@ const Layout: React.FC<LayoutProps> = ({ children, isAuthenticated, onLogout, cu
                     Nouveau Marché
                   </button>
                   
+                  <div className="h-8 w-px bg-slate-200 mx-2"></div>
+
+                  <a 
+                    href={NATIONAL_PORTAL_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hidden lg:flex items-center gap-2 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-green-700 hover:bg-green-50 rounded-lg transition-all border border-green-100"
+                  >
+                    <span>🌐</span> Portail National
+                  </a>
+                  
                   <button 
                     onClick={onLogout}
                     className="ml-4 bg-white hover:bg-slate-50 text-slate-600 px-4 py-2 rounded-lg border border-slate-200 text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
