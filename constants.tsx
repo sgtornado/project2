@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Candidate, CandidateStatus, ComplianceBadge, Tender } from './types';
 
 export const INSTITUTION_NAME = "Académie Régionale de l’Éducation et de la Formation – Guelmim-Oued Noun";
@@ -52,47 +52,19 @@ export const MOCK_CANDIDATES: Candidate[] = [
     status: CandidateStatus.ACCEPTED,
     compliance: ComplianceBadge.CONFORME,
     observations: "Dossier technique et administratif conforme aux exigences du CPS. Références solides.",
-  },
-  {
-    id: "2",
-    tenderRef: "AO-2026-001",
-    name: "Atlas Construction Sud",
-    fiscalId: "IF-99228811",
-    region: "Tan-Tan",
-    contact: "dir@atlasconst.ma",
-    score: 45,
-    status: CandidateStatus.REJECTED,
-    compliance: ComplianceBadge.NON_CONFORME,
-    observations: "Manque de garanties financières et absence de cautionnement provisoire.",
   }
 ];
 
-export const LogoPlaceholder = ({ className = "h-16 w-auto" }: { className?: string }) => {
-  const [useFallback, setUseFallback] = useState(false);
-  
-  // Image officielle locale demandée
-  const logoUrl = "logo-aref.png";
-  
-  // Fallback institutionnel sécurisé (Wikipedia Commons)
-  const fallbackUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png/600px-Logo_Minist%C3%A8re_de_l%27%C3%89ducation_Nationale%2C_du_Pr%C3%A9scolaire_et_des_Sports_-_Maroc.png";
-
-  return (
-    <div className="flex items-center justify-center bg-transparent shrink-0">
-      <img 
-        src={useFallback ? fallbackUrl : logoUrl} 
-        alt="Logo AREF Guelmim-Oued Noun" 
-        width="200"
-        height="80"
-        decoding="async"
-        loading="eager"
-        className={`${className} object-contain transition-opacity duration-300`}
-        onError={() => {
-          if (!useFallback) setUseFallback(true);
-        }}
-      />
+export const LogoPlaceholder = ({ className = "h-12" }: { className?: string }) => (
+  <div className={`flex items-center gap-3 ${className}`}>
+    <div className="w-10 h-10 bg-blue-900 rounded-lg flex items-center justify-center text-white font-black text-xl shadow-lg">
+      A
     </div>
-  );
-};
+    <div className="flex flex-col">
+      <span className="text-blue-900 font-black text-sm uppercase leading-none tracking-tighter">AREF</span>
+      <span className="text-green-700 font-bold text-[10px] uppercase leading-none tracking-widest">GON</span>
+    </div>
+  </div>
+);
 
-// Compatibilité
 export const OfficialBranding = LogoPlaceholder;
