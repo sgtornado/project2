@@ -17,17 +17,38 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('LOGIN');
   const [currentTender, setCurrentTender] = useState<Tender | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Vérifier la session actuelle au chargement
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-      if (session) setCurrentPage('DASHBOARD');
-      setIsLoading(false);
-    });
+    const initializeApp = async () => {
+      try {
+        console.log("App: Initializing Supabase session...");
+        
+        // Vérifier la session actuelle au chargement
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+
+        setIsAuthenticated(!!session);
+        if (session) {
+          setCurrentPage('DASHBOARD');
+        } else {
+          setCurrentPage('LOGIN');
+        }
+      } catch (err: any) {
+        console.error("App: Initialization failed", err);
+        setInitError(err.message || "Erreur de connexion aux services d'authentification.");
+      } finally {
+        // Crucial: S'assurer que le loader s'arrête quoi qu'il arrive
+        setIsLoading(false);
+      }
+    };
+
+    initializeApp();
 
     // Écouter les changements d'état (connexion/déconnexion)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("App: Auth state changed", _event);
       setIsAuthenticated(!!session);
       if (session) {
         setCurrentPage('DASHBOARD');
@@ -42,7 +63,11 @@ const App: React.FC = () => {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Logout error", err);
+    }
   };
 
   const handleTenderCreated = (tender: Tender) => {
@@ -61,10 +86,32 @@ const App: React.FC = () => {
     setCandidates(prev => [...prev, candidate]);
   };
 
+  // Affichage de l'erreur d'initialisation si présente
+  if (initError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
+        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-red-100 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h2 className="text-lg font-black text-slate-900 uppercase mb-2">Erreur de Connexion</h2>
+          <p className="text-sm text-slate-500 mb-6">{initError}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="w-full py-3 bg-blue-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+          >
+            Réessayer
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-blue-900 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Initialisation sécurisée...</p>
+        </div>
       </div>
     );
   }
